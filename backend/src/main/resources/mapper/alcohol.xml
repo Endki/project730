@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">	
+
+<mapper namespace="com.bangba.project730.model.dao.AlcoholDao">
+	<insert id="addAlcohol" parameterType="AlcoholDto">
+		insert into alcohol (type_kor, type_eng, name_kor, name_eng, abv, img_path, content)
+		values (#{type_kor}, #{type_eng}, #{name_kor}, #{name_eng}, #{abv}, #{img_path}, #{content})	
+	</insert>
+	<select id="searchAlcohol" resultType="AlcoholDto" parameterType="String">
+		select * from alcohol
+		where type_kor like concat('%', #{searchtxt}, '%') or type_eng like concat('%', #{searchtxt}, '%')
+		or name_kor like concat('%', #{searchtxt}, '%') or name_eng like concat('%', #{searchtxt}, '%')
+	</select>
+	<select id="searchAlcoholbyPK" resultType="AlcoholDto" parameterType="int">
+		select * from alcohol
+		where pk_alcohol = #{pk_alcohol}
+	</select>
+	<select id="searchAlcoholPK" resultType="int" parameterType="String">
+		select pk_alcohol from alcohol
+		where name_kor = #{name} or name_eng = #{name}
+	</select>
+	<select id="searchBaseAlcohol" resultType="AlcoholDto">
+		select 
+			a.pk_alcohol
+			, a.type_kor
+			, a.type_eng
+			, a.name_kor
+			, a.name_eng
+			, a.abv
+			, a.img_path
+			, a.content
+		from alcohol as a
+		where a.type_kor = a.name_kor
+		limit 6
+	</select>
+	
+</mapper>

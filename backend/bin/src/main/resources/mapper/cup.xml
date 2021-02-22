@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">	
+
+<mapper namespace="com.bangba.project730.model.dao.CupDao">
+	<insert id="addCup" parameterType="CupDto">
+		insert into cup (type_kor, type_eng, size, img_path)
+		values (#{type_kor}, #{type_eng}, #{size}, #{img_path})	
+	</insert>
+	
+	<select id="searchCup" resultType="CupDto" parameterType="String">
+		select * from cup
+		where user_no like %#{user_no} and title_kor = #{title_kor} and created_at = #{created_at}
+	</select>
+	
+	<select id="searchCupPK" resultType="int" parameterType="String">
+		select pk_cup from cup
+		where type_kor = #{type} and size = #{size}
+	</select>
+</mapper>

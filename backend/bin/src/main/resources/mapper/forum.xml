@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">	
+
+<mapper namespace="com.bangba.project730.model.dao.ForumDao">
+
+	<insert id="createForum" parameterType="ForumDto">
+		insert into article (user_no, title, category, like_cnt, hits, created_at, updated_at, content)
+		values (#{user_no}, #{title}, #{category}, #{like_cnt}, #{hits}, #{created_at}, #{updated_at}, #{content})	
+	</insert>
+	<select id="searchForumList" resultType="int" parameterType="ForumDto">
+		select * from forum order by pk_forum 
+	</select>
+</mapper>

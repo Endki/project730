@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">	
+
+<mapper namespace="com.bangba.project730.model.dao.ArticleDao">
+
+	<insert id="createArticle" parameterType="ArticleDto">
+		insert into article (user_no, title_kor, title_eng, like_cnt, bookmark_cnt, hits, created_at, updated_at, like_weekly, content, img_path, category, abv, cup_no)
+		values (#{user_no}, #{title_kor}, #{title_eng}, #{like_cnt}, #{bookmark_cnt}, #{hits}, #{created_at}, #{updated_at}
+		, #{like_weekly}, #{content}, #{img_path}, #{category}, #{abv}, #{cup_no})		
+	</insert>
+	
+	<select id="searchArticle" resultType="ArticleDto" parameterType="TaglistDto">
+		select * from article
+		where pk_article in (select distinct article_no from article_tag 
+		where tag_no in (select pk_tag from tag 
+		<if test="tag1 != null">
+    	where content_kor like #{tag1} or content_eng like #{tag1}
+  		</if>
+  		<if test="tag2 != null">
+    	or content_kor like #{tag2} or content_eng like #{tag2}
+  		</if>
+  		<if test="tag3 != null">
+    	or content_kor like #{tag3} or content_eng like #{tag3}
+  		</if>
+  		<if test="tag4 != null">
+    	or content_kor like #{tag4} or content_eng like #{tag4}
+  		</if>
+  		<if test="tag5 != null">
+    	or content_kor like #{tag5} or content_eng like #{tag5}
+  		</if>
+  		<if test="tag6 != null">
+    	or content_kor like #{tag6} or content_eng like #{tag6}
+  		</if>
+  		<if test="tag7 != null">
+    	or content_kor like #{tag7} or content_eng like #{tag7}
+  		</if>
+  		<if test="tag8 != null">
+    	or content_kor like #{tag8} or content_eng like #{tag8}
+  		</if>
+  		<if test="tag9 != null">
+    	or content_kor like #{tag9} or content_eng like #{tag9}
+  		</if>
+  		<if test="tag10 != null">
+    	or content_kor like #{tag10} or content_eng like #{tag10}
+  		</if>
+  		)) 
+		and (title_kor like concat('%', #{searchtxt}, '%') or title_eng like concat('%', #{searchtxt}, '%')) 
+		order by pk_article desc
+	</select>
+	
+	<select id="searchArticlePK" resultType="int" parameterType="ArticleDto">
+		select max(pk_article) from article
+		where user_no = #{user_no} and title_kor = #{title_kor} and created_at = #{created_at}
+	</select>
+	
+	<update id="updateArticle" parameterType="ArticleDto">
+		update article set 
+		title_kor = #{title_kor}, title_eng = #{title_eng}, updated_at = #{updated_at}, content = #{content}, img_path = #{img_path}, abv = #{abv}, cup_no = #{cup_no}
+		where pk_article = #{pk_article}
+	</update>
+	
+	<select id="searchUpdateArticlePK" resultType="int" parameterType="ArticleDto">
+		select max(pk_article) from article
+		where user_no = #{user_no} and title_kor = #{title_kor} and updated_at = #{updated_at}
+	</select>
+	
+	<delete id="deleteArticle" parameterType="int">
+		delete from article
+		where pk_article = #{pk_article}
+	</delete>
+	
+	
+	<select id="detailArticle" resultType="ArticleDto" parameterType="int">
+		select * from article
+		where pk_article = #{pk_article}
+	</select>
+	
+	
+	<insert id="addArticleAlcohol" parameterType="Article_alcoholDto">
+		insert into article_alcohol (article_no, alcohol_no, quantity, unit)
+		values (#{article_no}, #{alcohol_no}, #{quantity}, #{unit})	
+	</insert>
+	
+	<select id="searchArticleAlcohol" resultType="Article_alcoholDto" parameterType="int">
+		select * from article_alcohol
+		where article_no = #{pk_article}
+	</select>
+	
+	<delete id="deleteArticleAlcohol" parameterType="int">
+		delete from article_alcohol
+		where article_no = #{article_no}
+	</delete>
+	
+	
+	<insert id="addArticleIngredient" parameterType="Article_ingredientDto">
+		insert into article_ingredient (article_no, ingredient_no, type, quantity, unit)
+		values (#{article_no}, #{ingredient_no}, #{type}, #{quantity}, #{unit})	
+	</insert>
+	
+	<select id="searchArticleIngredient" resultType="Article_ingredientDto" parameterType="int">
+		select * from article_ingredient
+		where article_no = #{pk_article}
+	</select>
+	
+	<delete id="deleteArticleIngredient" parameterType="int">
+		delete from article_ingredient
+		where article_no = #{article_no} 
+	</delete>
+	
+	
+	<insert id="addArticleTag" parameterType="int">
+		insert into article_tag (article_no, tag_no)
+		values (#{pk_article}, #{pk_tag})	
+	</insert>
+	
+	<select id="searchArticleTag" resultType="Article_tagDto" parameterType="int">
+		select * from article_tag
+		where article_no = #{pk_article}
+	</select>
+	
+	<delete id="deleteArticleTag" parameterType="int">
+		delete from article_tag
+		where article_no = #{article_no} 
+	</delete>
+	
+	
+	<insert id="addRecipe" parameterType="RecipeDto">
+		insert into recipe (article_no, content, num)
+		values (#{article_no}, #{content}, #{num})	
+	</insert>
+	
+	<select id="searchRecipe" resultType="RecipeDto" parameterType="int">
+		select * from recipe
+		where article_no = #{pk_article} order by num
+	</select>
+	
+	<delete id="deleteRecipe" parameterType="int">
+		delete from recipe
+		where article_no = #{pk_article}
+	</delete>
+	
+	<select id="getAlcohol" parameterType="Integer" resultType="AtoA">
+		select c.name_kor, a.quantity, a.unit
+		from alcohol as c
+        inner join article_alcohol as a on  a.alcohol_no = c.pk_alcohol
+        where a.article_no = #{pk_article};
+	</select>
+	<select id="getIngredient" parameterType="Integer" resultType="AtoI">
+		select i.name_kor, a.quantity, a.unit, a.type
+		from ingredient as i
+        inner join article_ingredient as a on  a.ingredient_no = i.pk_ingredient
+        where a.article_no = #{pk_article};
+	</select>
+	<select id="getRecipe" parameterType="Integer" resultType="RecipeDto">
+		select *
+		from recipe
+		where article_no = #{pk_article};
+	</select>
+	<select id="getTag" parameterType="Integer" resultType="TagDto">
+		select *
+		from tag
+		where pk_tag in (select tag_no 
+						 from article_tag
+		                 where article_no = #{pk_article});
+	</select>
+
+	<insert id="createComment" parameterType="AcommentDto">
+		insert into acomment (article_no, user_no, content)
+		values (#{article_no}, #{user_no}, #{content})	
+	</insert>
+	
+	<select id="searchComment" resultType="AcommentDto" parameterType="int">
+		select * from acomment
+		where article_no = #{pk_article} order by pk_acomment desc
+	</select>
+	
+	<update id="updateComment" parameterType="AcommentDto">
+		update acomment set 
+		content = #{content} 
+		where pk_acomment = #{pk_acomment}
+	</update>
+	
+	<delete id="deleteComment" parameterType="int">
+		delete from acomment
+		where pk_acomment = #{pk_acomment}
+	</delete>
+	
+	<insert id="insertLike" parameterType="int">
+		insert into alike(article_no, user_no, bookmark)
+		values(#{article_no}, #{user_no}, false)
+	</insert>
+	
+	<delete id="deleteLike" parameterType="int">
+		delete 
+		from alike
+		where  article_no = #{article_no} and user_no = #{user_no} and bookmark = false;
+	</delete>
+	
+	<insert id="insertBmark" parameterType="int">
+		insert into alike(article_no, user_no, bookmark)
+		values(#{article_no}, #{user_no}, true)
+	</insert>
+	
+	<delete id="deleteBmark" parameterType="int">
+		delete 
+		from alike
+		where  article_no = #{article_no} and user_no = #{user_no} and bookmark = true;
+	</delete>
+	
+	<update id="upLike" parameterType="int">
+		update article
+		set like_cnt = like_cnt + 1
+		where pk_article = #{article_no} and pk_article in (select article_no
+															from alike
+															where user_no = #{user_no});
+	</update>
+	<update id="downLike" parameterType="int">
+		update article
+		set like_cnt = like_cnt - 1
+		where pk_article = #{article_no} and pk_article in (select article_no
+															from alike
+															where user_no = #{user_no});
+	</update>
+	<update id="upBmark" parameterType="int">
+		update article
+		set bookmark_cnt = bookmark_cnt + 1
+		where pk_article = #{article_no} and pk_article in (select article_no
+															from alike
+															where user_no = #{user_no});
+	</update>
+	
+	<update id="downBmark" parameterType="int">
+		update article
+		set bookmark_cnt = bookmark_cnt - 1
+		where pk_article = #{article_no} and pk_article in (select article_no
+															from alike
+															where user_no = #{user_no});
+	</update>
+	
+	<select id="isLike" parameterType="int" resultType="int">
+		select count(*)
+		from alike
+		where article_no = #{article_no} and user_no = #{user_no} and bookmark = false
+	</select>
+	
+	<select id="isBmark" parameterType="int" resultType="int">
+		select count(*)
+		from alike
+		where article_no = #{article_no} and user_no = #{user_no} and bookmark = true
+	</select>
+	
+	<select id="searchNewArticle"  resultType="ArticleDto">
+		select *
+		from article
+		order by created_at desc limit 5
+	</select>
+	
+	<select id="recommend" parameterType="map" resultType="ArticleDto">
+		select pk_article, title_kor, title_eng, img_path, content, abv
+		 from article
+		 where pk_article in (select distinct article_no
+							from article_ingredient
+		                     where ingredient_no in (select pk_ingredient
+		 											from ingredient
+													where name_kor like concat('%', #{ingredient}, '%') or name_eng like concat('%', #{ingredient}, '%')))
+		 and pk_article in (select distinct article_no 
+		 				  from article_alcohol
+						   where alcohol_no in (select pk_alcohol
+												from alcohol
+											where name_kor like concat('%', #{base}, '%') or name_eng like concat('%', #{base}, '%')))
+		and category = 1;
+	</select>
+</mapper>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">	
+    
+<mapper namespace="com.bangba.project730.model.dao.FollowDao">
+	<insert id="follow" parameterType="FollowDto">
+		insert into follow(user_no, target_no)
+		values (#{user_no}, #{target_no})
+	</insert>
+	
+	<delete id="unfollow" parameterType="FollowDto">
+		delete 
+		from follow
+		where user_no = #{user_no} and target_no = #{target_no}
+	</delete>
+	
+	<select id="isFollow" parameterType="FollowDto" resultType="Integer">
+		select count(*)
+		from follow
+		where user_no = #{user_no} and target_no = #{target_no}
+	</select>
+	
+	<select id="selectFollowerList" parameterType="Integer" resultType="FollowDetailDto">
+		select pk_user, user_name, img_path, (select count(*) from follow where user_no = pk_user and target_no = #{user_no}) as follow_cnt
+		from user 
+		where pk_user in 
+		(select user_no
+		from follow
+		where target_no = #{user_no});
+	</select>
+	
+	<select id="selectFollowingList" parameterType="Integer" resultType="FollowDetailDto">
+		select pk_user, user_name, img_path, (select count(*) from follow where target_no = pk_user and user_no = #{user_no}) as follow_cnt
+		from user 
+		where pk_user in 
+		(select target_no
+		from follow
+		where user_no = #{user_no})
+	</select>
+</mapper>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">	
+
+<mapper namespace="com.bangba.project730.model.dao.TagDao">
+	<insert id="addTag" parameterType="TagDto">
+		insert into tag (content_kor, content_eng, type)
+		values (#{content_kor}, #{content_eng}, #{type})	
+	</insert>
+	<select id="searchTag" resultType="TagDto" parameterType="String">
+		select * from tag
+		where content_kor like %#{content}% or content_eng like %#{content}% and type = 3
+	</select>
+	<select id="searchTagPK" resultType="int" parameterType="String">
+		select pk_tag from tag
+		where content = #{content_kor} or content = #{content_eng}
+	</select>
+</mapper>

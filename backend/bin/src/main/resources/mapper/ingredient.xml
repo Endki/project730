@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">	
+
+<mapper namespace="com.bangba.project730.model.dao.IngredientDao">
+	<insert id="addIngredient" parameterType="IngredientDto">
+		insert into ingredient (name_kor, name_eng, img_path, content)
+		values (#{name_kor}, #{name_eng}, #{img_path}, #{content})	
+	</insert>
+	<select id="searchIngredient" resultType="IngredientDto" parameterType="String">
+		select * from ingredient
+		where name_kor like %#{name}% or name_eng like %#{name}%
+	</select>
+	
+	<select id="searchIngredientPK" resultType="int" parameterType="String">
+		select pk_ingredient from ingredient
+		where name_kor like #{name}
+	</select>
+	
+</mapper>

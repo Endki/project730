@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bangba.project730.model.dao.AdminDao">
+	<select id="searchByName" parameterType="String" resultType="UserDto">
+		select pk_user, email, user_name, birth, phone_number, user_type, banned
+		from user 
+		where user_name like concat('%', #{keyword}, '%')
+	</select>
+	
+	<select id="searchAll" resultType="UserDto">
+		select pk_user, email, user_name, birth, phone_number, user_type, banned
+		from user
+	</select>
+	
+	<delete id="deleteUser" parameterType="Integer">
+		delete
+		from user
+		where pk_user = #{user_no}
+	</delete>
+	
+	<update id="changeToAdmin" parameterType="userDto">
+		update user
+		set user_type = #{user_type}
+		where pk_user = #{pk_user}
+	</update>
+	
+	<update id="banUser" parameterType="userDto">
+		update user
+		set banned = #{banned}
+		where pk_user = #{pk_user}
+	</update>
+	
+	<insert id="createAdmin" parameterType="Integer">
+		inert into admin (user_no, uer_mgt,article_mgt, forum_mgt)
+		values (#{pk_user}, true, false, false)
+	</insert>
+	
+</mapper>

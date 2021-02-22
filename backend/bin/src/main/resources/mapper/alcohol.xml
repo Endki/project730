@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">	
+
+<mapper namespace="com.bangba.project730.model.dao.AlcoholDao">
+	<insert id="addAlcohol" parameterType="AlcoholDto">
+		insert into alcohol (type_kor, type_eng, name_kor, name_eng, abv, img_path, content)
+		values (#{type_kor}, #{type_eng}, #{name_kor}, #{name_eng}, #{abv}, #{img_path}, #{content})	
+	</insert>
+	<select id="searchAlcohol" resultType="AlcoholDto" parameterType="String">
+		select * from alcohol
+		where type_kor like %#{type}% or type_eng like %#{type}% 
+		or name_kor like %#{name}% or name_eng like %#{name}%
+	</select>
+	<select id="searchAlcoholPK" resultType="int" parameterType="String">
+		select pk_alcohol from alcohol
+		where user_no = #{user_no} and title_kor = #{title_kor} and created_at = #{created_at}
+	</select>
+</mapper>

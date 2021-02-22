@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bangba.project730.model.dao.UserDao">
+	<insert id="createUser" parameterType="UserDto">
+		insert into user (email, password, user_name, birth, phone_number, user_type, banned, img_path)
+		values (#{email}, #{password}, #{user_name}, #{birth}, #{phone_number}, #{user_type}, #{banned}, #{img_path})	
+	</insert>
+	
+	<select id="login" parameterType="map" resultType="UserDto">
+		select email, password, user_name, birth, phone_number, user_type, banned, img_path
+		from user
+		where email = #{email} and password = #{password}
+	</select>
+	
+	<select id="isDuplicatedEmail" parameterType="String" resultType="Integer">
+		select count(*)
+		from user
+		where email = #{email}	
+	</select>
+	
+	<select id="isDuplicatedName" parameterType="String" resultType="Integer">
+		select count(*)
+		from user
+		where user_name = #{user_name}	
+	</select>
+	
+	<select id="getMyPage" parameterType="Integer" resultType="UserDto">
+		select select pk_user, email, user_name, birth, phone_number, img_path
+		from user
+		where pk_user = #{pk_user}
+	</select>
+	
+	<update id="updateMyPage" parameterType="UserDto">
+		update user
+		set password = #{password}
+		where pk_user = #{pk_user}
+	</update>
+	
+	
+	<delete id="deleteMyPage" parameterType="Integer">
+		delete 
+		from user
+		where pk_user = #{pk_user}
+	</delete>
+</mapper>
